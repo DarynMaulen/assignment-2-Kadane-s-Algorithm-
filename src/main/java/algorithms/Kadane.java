@@ -99,4 +99,5 @@ public final class Kadane {
 
         return new KadaneResult(maxSoFar, start, end);
     }
+
 }
