@@ -5,15 +5,25 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+  Integration tests for Kadane instrumentation.
+  Verifies:
+    - instrumented run returns the same KadaneResult as plain run
+    - basic sanity checks on tracker counters (non-negative, at least one access per element)
+    - instrumented call on empty array does not throw
+*/
+
 public class KadaneMetricsIntegrationTest {
+
     @Test
     void instrumentedAndPlainProduceSameResultAndMetricsPositive(){
+        // Integration test: verify metrics collection doesn't affect functionality
         long[] array = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
 
-        // plain
+        // plain execution
         KadaneResult plain = Kadane.run(array);
 
-        // instrumented
+        // instrumented execution
         PerformanceTracker tracker = new PerformanceTracker();
         KadaneResult instr = Kadane.run(array, tracker);
 
@@ -29,6 +39,7 @@ public class KadaneMetricsIntegrationTest {
 
     @Test
     void emptyArrayInstrumentation() {
+        // Test metrics collection with empty array
         long[] array = new long[0];
         PerformanceTracker tracker = new PerformanceTracker();
         KadaneResult r = Kadane.run(array, tracker);
