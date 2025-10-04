@@ -46,10 +46,16 @@ public class PerformanceTracker {
 
     // counter increments (synchronized)
     public synchronized void incrementComparisons(){
-        comparisons++;
+        incrementComparisons(1);
+    }
+    public synchronized void incrementComparisons(long n){
+        comparisons += n;
     }
     public synchronized void incrementArrayAccesses(){
-        arrayAccesses++;
+        incrementArrayAccesses(1);
+    }
+    public synchronized void incrementArrayAccesses(long n){
+        arrayAccesses += n;
     }
     public synchronized void incrementAssignments(){
         incrementAssignments(1);
@@ -58,7 +64,10 @@ public class PerformanceTracker {
         assignments += n;
     }
     public synchronized void incrementAdditions(){
-        additions++;
+        incrementAdditions(1);
+    }
+    public synchronized void incrementAdditions(long n){
+        additions += n;
     }
 
     // reset all counters and timers
