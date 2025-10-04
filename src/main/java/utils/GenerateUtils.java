@@ -4,7 +4,9 @@ import algorithms.KadaneResult;
 
 import java.util.Random;
 
-public class TestUtils {
+public class GenerateUtils {
+    private static final Random RANDOM = new Random(42); // Fixed seed for reproducibility
+
     public static KadaneResult bruteForce(long[] array) {
         if (array.length == 0) {
             return new KadaneResult(0L, -1, -1);
@@ -69,6 +71,19 @@ public class TestUtils {
     public static long[] generateReverseSortedArray(int size) {
         long[] array = new long[size];
         for (int i = 0; i < size; i++) array[i] = size - i;
+        return array;
+    }
+
+    public static long[] generateNearlySortedArray(int size) {
+        long[] array = generateSortedArray(size);
+        // Swap some elements to make it nearly sorted
+        for (int i = 0; i < size / 10; i++) { // 10% of elements
+            int idx1 = RANDOM.nextInt(size);
+            int idx2 = RANDOM.nextInt(size);
+            long temp = array[idx1];
+            array[idx1] = array[idx2];
+            array[idx2] = temp;
+        }
         return array;
     }
 }
