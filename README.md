@@ -29,9 +29,15 @@ assignment2-kadane/
 
 │   ├── metrics/MetricsCsvWriter.java
 
+│   └── cli/BenchmarkConfig.java
+
 │   └── cli/BenchmarkRunner.java
 
 │   └── cli/GenerateUtils.java
+
+│   └── benchmark/KadaneBenchmark.java
+
+│   └── benchmark/BenchmarkLauncher.java
 
 ├── src/test/java/...
 
@@ -122,3 +128,4 @@ The algorithm makes a single pass with O(1) work per element.
 Space complexity:
 
 - Θ(1) — only a few scalar variables are used.
+
