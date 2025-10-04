@@ -16,6 +16,9 @@ public final class Kadane {
         if (array == null) {
             throw new IllegalArgumentException("Input is null");
         }
+        if (tracker != null) {
+            tracker.reset();
+        }
         if (array.length == 0) {
             return new KadaneResult(0L,-1,-1);
         }

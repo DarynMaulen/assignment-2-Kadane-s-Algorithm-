@@ -1,7 +1,5 @@
 package cli;
 
-import algorithms.Kadane;
-import algorithms.KadaneResult;
 import metrics.PerformanceTracker;
 import metrics.MetricsCsvWriter;
 
@@ -116,7 +114,7 @@ public class BenchmarkRunner {
                     throw e;
                 }
 
-                // print lightweight summary (no strict timing assertions)
+                // print lightweight summary
                 System.out.printf("  Trial %d: accesses=%d, comparisons=%d, assignments=%d%n",
                         trial, tracker.getArrayAccesses(), tracker.getComparisons(), tracker.getAssignments());
             }

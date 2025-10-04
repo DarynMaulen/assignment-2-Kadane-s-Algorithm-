@@ -8,6 +8,9 @@ import static utils.GenerateUtils.*;
 public class DataGenerator {
     public static long[] generateArray(int size, String inputType) {
         if (inputType == null) throw new IllegalArgumentException("inputType must not be null");
+        if (size == 0){
+            return new long[0];
+        }
         return switch (inputType.toLowerCase()) {
             case "random" -> generateRandomArray(size);
             case "sorted" -> generateSortedArray(size);
