@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
-import static utils.TestUtils.*;
+import static utils.GenerateUtils.*;
 
 /**
  * Comprehensive test suite for Kadane's algorithm covering all edge cases,

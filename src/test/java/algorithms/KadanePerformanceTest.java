@@ -4,7 +4,7 @@ import metrics.PerformanceTracker;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static utils.TestUtils.*;
+import static utils.GenerateUtils.*;
 
 /**
  * Performance-focused tests for Kadane's algorithm to validate
