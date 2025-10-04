@@ -1,5 +1,17 @@
 package metrics;
 
+/*
+  Simple performance tracker.
+  Counters:
+    - comparisons
+    - arrayAccesses
+    - assignments (can increment by n)
+    - additions
+  Timing:
+    - startTimer() / stopTimer() record elapsed time (stored in ns, exposed as ms).
+  Methods that change counters are synchronized for basic thread-safety.
+  Use reset() before a new run if reusing the same tracker.
+*/
 public class PerformanceTracker {
     private long comparisons = 0;
     private long arrayAccesses = 0;
@@ -24,6 +36,7 @@ public class PerformanceTracker {
         return timeNs/1_000_000;
     }
 
+    // timer control
     public void startTimer(){
         startNs = System.nanoTime();
     }
@@ -31,6 +44,7 @@ public class PerformanceTracker {
         timeNs = Math.max(0,System.nanoTime()-startNs);
     }
 
+    // counter increments (synchronized)
     public synchronized void incrementComparisons(){
         comparisons++;
     }
@@ -47,10 +61,12 @@ public class PerformanceTracker {
         additions++;
     }
 
+    // reset all counters and timers
     public void reset(){
         comparisons = arrayAccesses = assignments = additions = timeNs = startNs = 0;
     }
 
+    // string helpers
     public String toString(){
         return "PerformanceTracker [comparisons=" + comparisons + ", " +
                 "arrayAccess=" + arrayAccesses + ", assignments=" + assignments
@@ -58,6 +74,7 @@ public class PerformanceTracker {
                 timeNs + ", startNs=" + startNs + "]";
     }
 
+    // convenience CSV row
     public String toCsvLine(String algorithm, String inputType, int n, int trial){
         return String.format("%s,%s,%d,%d,%d,%d,%d,%d,%d",
                 algorithm,

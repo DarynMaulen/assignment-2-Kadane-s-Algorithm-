@@ -7,10 +7,19 @@ import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+  Tests for MetricsCsvWriter.
+  Verifies:
+    - writeHeader creates the CSV header
+    - appendLine writes a metrics row
+    - content format contains expected columns and values
+*/
 
 public class MetricsCsvWriterTest {
+
     @Test
     void writeHeaderAndAppendLine() throws Exception {
+        // Test CSV file creation with header and data row
         File tmp = Files.createTempFile("metrics_test", ".csv").toFile();
         tmp.deleteOnExit();
 
