@@ -1,5 +1,7 @@
 package cli;
 
+import algorithms.Kadane;
+import algorithms.KadaneResult;
 import metrics.PerformanceTracker;
 import metrics.MetricsCsvWriter;
 
@@ -38,7 +40,7 @@ public class BenchmarkRunner {
 
             System.out.println("Running benchmarks with configuration:");
             System.out.println("  Sizes: " + Arrays.toString(config.sizes));
-            System.out.println("  Input type: " + config.inputType);
+            System.out.println("  Input type: " + Arrays.toString(config.inputTypes));
             System.out.println("  Trials: " + config.trials);
             System.out.println("  Output: " + config.outputFile.getAbsolutePath());
 
@@ -69,7 +71,11 @@ public class BenchmarkRunner {
                     break;
                 case "--input-type":
                     if (i + 1 >= args.length) throw new IllegalArgumentException("--input-type requires a value");
-                    config.inputType = args[++i].toLowerCase();
+                    String[] types = args[++i].split(",");
+                    config.inputTypes = new String[types.length];
+                    for (int j = 0; j < types.length; j++) {
+                        config.inputTypes[j] = types[j].trim().toLowerCase();
+                    }
                     break;
                 case "--trials":
                     if (i + 1 >= args.length) throw new IllegalArgumentException("--trials requires a number");
@@ -99,58 +105,67 @@ public class BenchmarkRunner {
         // Write CSV header (overwrites existing file)
         MetricsCsvWriter.writeHeader(config.outputFile);
 
-        for (int size : config.sizes) {
-            System.out.println("Testing size: " + size);
+        for (String inputType : config.inputTypes) {
+            System.out.println("Input type: " + inputType);
 
-            for (int trial = 1; trial <= config.trials; trial++) {
-                long[] array = DataGenerator.generateArray(size, config.inputType);
-                PerformanceTracker tracker = new PerformanceTracker();
+            for (int size : config.sizes) {
+                System.out.println("  Testing size: " + size);
 
-                try {
+                for (int trial = 1; trial <= config.trials; trial++) {
+                    long[] array = DataGenerator.generateArray(size, inputType);
+                    PerformanceTracker tracker = new PerformanceTracker();
+
+                    // run algorithm to fill tracker
+                    KadaneResult r = Kadane.run(array, tracker);
+
                     MetricsCsvWriter.appendLine(config.outputFile, "Kadane",
-                            config.inputType, size, trial, tracker);
-                } catch (IOException e) {
-                    System.err.println("Failed to write CSV row: " + e.getMessage());
-                    throw e;
-                }
+                            inputType, size, trial, tracker);
 
-                // print lightweight summary
-                System.out.printf("  Trial %d: accesses=%d, comparisons=%d, assignments=%d%n",
-                        trial, tracker.getArrayAccesses(), tracker.getComparisons(), tracker.getAssignments());
+                    // print lightweight summary
+                    System.out.printf("    Trial %d: accesses=%d, comparisons=%d, assignments=%d%n",
+                            trial, tracker.getArrayAccesses(), tracker.getComparisons(), tracker.getAssignments());
+                }
             }
         }
 
         System.out.println("Benchmark completed. Results saved to: " + config.outputFile.getAbsolutePath());
     }
 
+
     private static int[] parseSizes(String sizesStr) {
         String[] parts = sizesStr.split(",");
         int[] sizes = new int[parts.length];
         for (int i = 0; i < parts.length; i++) {
-            sizes[i] = Integer.parseInt(parts[i].trim());
+            try {
+                sizes[i] = Integer.parseInt(parts[i].trim());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid size: '" + parts[i] + "'. Sizes must be integers.");
+            }
             if (sizes[i] <= 0) throw new IllegalArgumentException("Sizes must be positive integers");
         }
         return sizes;
     }
 
+
     private static void validateConfig(BenchmarkConfig config) {
         if (config.sizes == null || config.sizes.length == 0) {
             throw new IllegalArgumentException("Sizes must be specified (use --sizes)");
         }
-        if (config.inputType == null) {
+        if (config.inputTypes == null || config.inputTypes.length == 0) {
             throw new IllegalArgumentException("Input type must be specified (use --input-type)");
         }
-        // validate input type known
-        switch (config.inputType.toLowerCase()) {
-            case "random":
-            case "sorted":
-            case "reverse_sorted":
-            case "all_positive":
-            case "all_negative":
-            case "nearly_sorted":
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown input type: " + config.inputType);
+        for (String t : config.inputTypes) {
+            switch (t) {
+                case "random":
+                case "sorted":
+                case "reverse_sorted":
+                case "all_positive":
+                case "all_negative":
+                case "nearly_sorted":
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown input type: " + t);
+            }
         }
         if (config.trials <= 0) {
             throw new IllegalArgumentException("Trials must be positive");
