@@ -18,6 +18,7 @@ public final class Kadane {
         }
         if (tracker != null) {
             tracker.reset();
+            tracker.startTimer();
         }
         if (array.length == 0) {
             return new KadaneResult(0L,-1,-1);
@@ -30,7 +31,7 @@ public final class Kadane {
             int temporaryStart = 0;
             int start = 0;
             int end = 0;
-            for (int i = 1, len = array.length; i < len; i++) {
+            for (int i = 1; i < array.length; i++) {
                 long current = array[i];
                 long sum = current + maxEnding;
                 if (current > sum) {
@@ -63,7 +64,7 @@ public final class Kadane {
         int start = 0;
         int end = 0;
 
-        for (int i = 1, len = array.length; i < len; i++) {
+        for (int i = 1; i < array.length; i++) {
             // access
             localArrayAccesses++;
             long current = array[i];
@@ -74,8 +75,9 @@ public final class Kadane {
 
             // comparison to decide start/extend
             localComparisons++;
-            localAssignments++; // for assignment to maxEnding (will be applied either way)
+            localAssignments++; // for assignment to maxEnding
             if (current > sum) {
+                localAssignments++;
                 maxEnding = current;
                 temporaryStart = i;
             } else {
@@ -94,12 +96,13 @@ public final class Kadane {
         }
 
         // flush local counters into shared tracker once
-        // use the tracker API; tracker methods are synchronized so single calls are cheaper
+        // use the tracker API, tracker methods are synchronized so single calls are cheaper
         tracker.incrementComparisons(localComparisons);
         tracker.incrementArrayAccesses(localArrayAccesses);
         tracker.incrementAssignments(localAssignments);
         tracker.incrementAdditions(localAdditions);
 
+        tracker.stopTimer();
         return new KadaneResult(maxSoFar, start, end);
     }
 

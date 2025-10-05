@@ -9,15 +9,15 @@ import java.util.Arrays;
  */
 public class BenchmarkConfig {
     public int[] sizes;
-    public String inputType;
-    public int trials = 3; // default
+    public String[] inputTypes;        // was String inputType
+    public int trials = 3;
     public File outputFile;
 
     @Override
     public String toString() {
         return "BenchmarkConfig{" +
                 "sizes=" + (sizes == null ? "null" : Arrays.toString(sizes)) +
-                ", inputType='" + inputType +
+                ", inputTypes=" + (inputTypes == null ? "null" : Arrays.toString(inputTypes)) +
                 ", trials=" + trials +
                 ", outputFile=" + (outputFile == null ? "null" : outputFile.getAbsolutePath()) +
                 '}';
