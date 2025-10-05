@@ -64,13 +64,13 @@ Run all tests:
 
 Run benchmark:
 
-- java -cp target/classes cli.BenchmarkRunner --sizes 100,1000,10000 --input-type random --trials 3 --output results.csv
+Use BenchmarkMenu
 
 Options
 
 - --sizes <n1,n2,...> — input sizes to test.
 
-- --input-type <type> — random, sorted, reverse_sorted, all_positive, all_negative, nearly_sorted.
+- --input-types <type> — random, sorted, reverse_sorted, all_positive, all_negative, nearly_sorted. (default: random)
 
 - --trials <n> — number of trials per size (default: 3).
 
@@ -128,4 +128,5 @@ The algorithm makes a single pass with O(1) work per element.
 Space complexity:
 
 - Θ(1) — only a few scalar variables are used.
+
 
